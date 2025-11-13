@@ -84,24 +84,28 @@ export default function LeadsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">Leads Management</h1>
-            <div className="flex space-x-4">
-              <Link
-                href="/crm/dashboard"
-                className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
-              >
-                Back to Dashboard
-              </Link>
-            </div>
-          </div>
+    <div className="p-6 space-y-6">
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg p-4 border border-gray-200">
+          <p className="text-gray-500 text-sm mb-1">Total Leads</p>
+          <p className="text-2xl font-bold text-gray-900">{leads.length}</p>
+        </div>
+        <div className="bg-white rounded-lg p-4 border border-gray-200">
+          <p className="text-gray-500 text-sm mb-1">New</p>
+          <p className="text-2xl font-bold text-blue-600">{leads.filter(l => l.status === 'new').length}</p>
+        </div>
+        <div className="bg-white rounded-lg p-4 border border-gray-200">
+          <p className="text-gray-500 text-sm mb-1">Contacted</p>
+          <p className="text-2xl font-bold text-yellow-600">{leads.filter(l => l.status === 'contacted').length}</p>
+        </div>
+        <div className="bg-white rounded-lg p-4 border border-gray-200">
+          <p className="text-gray-500 text-sm mb-1">Enrolled</p>
+          <p className="text-2xl font-bold text-green-600">{leads.filter(l => l.status === 'enrolled').length}</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div>
         {/* Filters */}
         <div className="bg-white shadow rounded-lg p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
