@@ -38,8 +38,8 @@ services:
       AUTOSEND_SENDER_EMAIL: ${AUTOSEND_SENDER_EMAIL}
       AUTOSEND_SENDER_NAME: ${AUTOSEND_SENDER_NAME}
       ADMIN_NOTIFICATION_EMAIL: ${ADMIN_NOTIFICATION_EMAIL}
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -52,6 +52,27 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:latest
+    container_name: admissions-crm-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - admissions-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres_data:
