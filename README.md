@@ -88,8 +88,8 @@ A comprehensive admissions website and CRM system built with Next.js 14, TypeScr
    ```
 
 8. **Access the application**
-   - Public website: http://localhost:3000
-   - CRM login: http://localhost:3000/auth/signin
+    - Public website: http://localhost:3000
+    - CRM login: http://localhost:3000/login
 
 ## Database Schema
 
@@ -147,7 +147,7 @@ A comprehensive admissions website and CRM system built with Next.js 14, TypeScr
 3. Automatic status assignment to "new" for all leads
 
 ### CRM Dashboard
-1. **Login**: Access the CRM at `/auth/signin`
+1. **Login**: Access the CRM at `/login`
 2. **Dashboard**: View statistics and recent leads
 3. **Leads Management**: 
    - View all leads with filtering and search

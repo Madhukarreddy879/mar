@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { sendAdminNotificationEmail } from '@/lib/autosend';
 
 const prisma = new PrismaClient();
 
@@ -50,6 +51,23 @@ export async function POST(request: NextRequest) {
         status: 'new'
       }
     });
+
+    // Send admin notification email (non-blocking)
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
+    if (adminEmail) {
+      sendAdminNotificationEmail(adminEmail, {
+        firstName: lead.firstName,
+        lastName: lead.lastName || undefined,
+        email: lead.email,
+        phone: lead.phone,
+        course: lead.course || undefined,
+        message: lead.message || undefined,
+        createdAt: lead.createdAt.toISOString()
+      }).catch(error => {
+        // Log but don't throw - we don't want to fail lead creation if email fails
+        console.error('Failed to send admin notification:', error);
+      });
+    }
 
     return NextResponse.json(
       { 

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { User, Mail, Phone, Calendar, MessageSquare, Edit, Save, X } from 'lucide-react';
+import { User, Mail, Phone, Calendar, MessageSquare } from 'lucide-react';
 
 interface Lead {
   id: number;
@@ -41,18 +41,12 @@ export default function LeadDetailPage() {
   
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(false);
-  const [editData, setEditData] = useState({
-    status: '',
-    course: '',
-    message: ''
-  });
   const [newNote, setNewNote] = useState('');
   const [addingNote, setAddingNote] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/auth/signin');
+      router.push('/login');
       return;
     }
 
@@ -67,11 +61,6 @@ export default function LeadDetailPage() {
       if (response.ok) {
         const data = await response.json();
         setLead(data.lead);
-        setEditData({
-          status: data.lead.status,
-          course: data.lead.course,
-          message: data.lead.message
-        });
       } else {
         router.push('/crm/leads');
       }
@@ -83,25 +72,7 @@ export default function LeadDetailPage() {
     }
   };
 
-  const handleUpdate = async () => {
-    try {
-      const response = await fetch(`/api/leads/${leadId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editData),
-      });
 
-      if (response.ok) {
-        const updatedData = await response.json();
-        setLead(updatedData.lead);
-        setEditing(false);
-      }
-    } catch (error) {
-      console.error('Error updating lead:', error);
-    }
-  };
 
   const handleAddNote = async () => {
     if (!newNote.trim()) return;
@@ -161,18 +132,9 @@ export default function LeadDetailPage() {
                 href="/crm/leads"
                 className="text-blue-600 hover:text-blue-700 mr-4"
               >
-                ← Back to Leads
+                ← Back to Students
               </Link>
-              <h1 className="text-3xl font-bold text-gray-900">Lead Details</h1>
-            </div>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => setEditing(!editing)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center"
-              >
-                {editing ? <X className="h-4 w-4 mr-2" /> : <Edit className="h-4 w-4 mr-2" />}
-                {editing ? 'Cancel' : 'Edit'}
-              </button>
+              <h1 className="text-3xl font-bold text-gray-900">Student Details</h1>
             </div>
           </div>
         </div>
@@ -184,7 +146,7 @@ export default function LeadDetailPage() {
           <div className="lg:col-span-2">
             <div className="bg-white shadow rounded-lg">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-medium text-gray-900">Lead Information</h2>
+                <h2 className="text-lg font-medium text-gray-900">Student Information</h2>
               </div>
               
               <div className="px-6 py-4">
@@ -230,86 +192,27 @@ export default function LeadDetailPage() {
                 </div>
                 
                 <div className="mt-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                  {editing ? (
-                    <textarea
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      rows={3}
-                      value={editData.message}
-                      onChange={(e) => setEditData({...editData, message: e.target.value})}
-                    />
-                  ) : (
-                    <p className="text-sm text-gray-900">{lead.message || 'No message provided'}</p>
-                  )}
-                </div>
+                   <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                   <p className="text-sm text-gray-900">{lead.message || 'No message provided'}</p>
+                 </div>
               </div>
             </div>
           </div>
           
-          {/* Status and Course */}
+          {/* Course Information */}
           <div>
             <div className="bg-white shadow rounded-lg mb-6">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-medium text-gray-900">Status & Course</h2>
+                <h2 className="text-lg font-medium text-gray-900">Course Information</h2>
               </div>
               
               <div className="px-6 py-4">
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                  {editing ? (
-                    <select
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      value={editData.status}
-                      onChange={(e) => setEditData({...editData, status: e.target.value})}
-                    >
-                      <option value="new">New</option>
-                      <option value="contacted">Contacted</option>
-                      <option value="interested">Interested</option>
-                      <option value="enrolled">Enrolled</option>
-                      <option value="rejected">Rejected</option>
-                    </select>
-                  ) : (
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      lead.status === 'new' ? 'bg-blue-100 text-blue-800' :
-                      lead.status === 'contacted' ? 'bg-yellow-100 text-yellow-800' :
-                      lead.status === 'interested' ? 'bg-green-100 text-green-800' :
-                      lead.status === 'enrolled' ? 'bg-purple-100 text-purple-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {lead.status}
-                    </span>
-                  )}
-                </div>
-                
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Course</label>
-                  {editing ? (
-                    <select
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      value={editData.course}
-                      onChange={(e) => setEditData({...editData, course: e.target.value})}
-                    >
-                      <option value="Web Development">Web Development</option>
-                      <option value="Data Science">Data Science</option>
-                      <option value="Digital Marketing">Digital Marketing</option>
-                      <option value="UI/UX Design">UI/UX Design</option>
-                    </select>
-                  ) : (
-                    <p className="text-sm text-gray-900">{lead.course}</p>
-                  )}
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Interested Course</label>
+                  <p className="text-sm text-gray-900">{lead.course}</p>
                 </div>
               </div>
             </div>
-            
-            {editing && (
-              <button
-                onClick={handleUpdate}
-                className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 flex items-center justify-center"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                Save Changes
-              </button>
-            )}
           </div>
         </div>
         
