@@ -7,7 +7,8 @@ export default function Home() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: ''
+    phone: '',
+    course: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -35,7 +36,7 @@ export default function Home() {
           lastName: formData.name.split(' ').slice(1).join(' '),
           email: formData.email,
           phone: formData.phone,
-          course: 'b-tech',
+          course: formData.course || 'b-tech',
           message: ''
         }),
       });
@@ -45,7 +46,8 @@ export default function Home() {
         setFormData({
           name: '',
           email: '',
-          phone: ''
+          phone: '',
+          course: ''
         });
         // Redirect to thanks page after 2 seconds
         setTimeout(() => {
@@ -61,72 +63,99 @@ export default function Home() {
     }
   };
 
+  const handleCourseClick = (courseName: string) => {
+    setFormData(prev => ({
+      ...prev,
+      course: courseName
+    }));
+    // Scroll to form
+    const formElement = document.getElementById('apply-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Main Section */}
-      <section className="bg-gray-100 py-20">
+      <section className="bg-gray-100 py-12 sm:py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
             {/* Left Side - Logo and Content */}
             <div className="flex flex-col items-center lg:items-start">
-              {/* Logo and NAAC Badge */}
-              <div className="flex items-start gap-8 mb-8">
-                <div>
+              {/* Logo and NIRF Badge */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6 mb-8 sm:mb-12 flex-wrap">
+                <div className="flex-shrink-0">
                   <Image
                     src="/logo.png"
                     alt="Marwadi University"
-                    width={150}
-                    height={150}
-                    className="h-auto w-auto"
+                    width={200}
+                    height={200}
+                    className="h-auto w-auto sm:w-48 md:w-64 lg:w-96"
                   />
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-md">
-                  <div className="text-yellow-500 text-2xl font-bold">A+</div>
-                  <div className="text-xs text-gray-600 font-semibold">NAAC</div>
+                <div className="flex-shrink-0">
+                  <Image
+                    src="/nirf.png"
+                    alt="NIRF Logo"
+                    width={80}
+                    height={100}
+                    className="h-auto w-auto sm:w-20 md:w-24"
+                  />
+                </div>
+                <div className="flex-shrink-0">
+                  <Image
+                    src="/qs-asia-rank.jpg"
+                    alt="QS Asia Rank"
+                    width={100}
+                    height={120}
+                    className="h-auto w-auto sm:w-24 md:w-32"
+                  />
                 </div>
               </div>
 
               {/* Main Heading */}
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
                 B.tech Admissions Open
               </h2>
 
               {/* Subtitle */}
-              <p className="text-2xl text-teal-600 font-semibold mb-6">
+              <p className="text-lg sm:text-xl md:text-2xl text-teal-600 font-semibold mb-4 sm:mb-6">
                 For Academic Year 2025-26
               </p>
 
               {/* Office Details */}
-              <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-lg mb-8 border-l-4 border-teal-500">
-                <p className="text-lg text-gray-800 font-bold mb-3">
-                  North Telangana Zone Office at<br />
-                  <span className="text-teal-600">Wanaparthy, Mancherial, Karimnagar</span>
+              <div className="bg-gradient-to-br from-white to-gray-50 p-4 sm:p-6 rounded-xl shadow-lg mb-6 sm:mb-8 border-l-4 border-teal-500 w-full sm:w-auto">
+                <p className="text-base sm:text-lg text-gray-800 font-bold mb-3">
+                   Telangana Zonal Office at<br />
+                   <span className="text-teal-600">Warangal, Karimnagar, Asifabad, Mancherial</span>
                 </p>
-                <p className="text-base text-gray-700 font-semibold mb-2">
-                  Enquiry @{' '}
-                  <span className="bg-teal-100 text-teal-700 px-3 py-1 rounded-full font-bold text-lg">
-                    Dr. P. Nithin Rao
-                  </span>
+                <p className="text-sm sm:text-base text-gray-700 font-semibold mb-2">
+                   Contact @{' '}
+                   <span className="bg-teal-100 text-teal-700 px-2 sm:px-3 py-1 rounded-full font-bold text-sm sm:text-lg">
+                     Dr. P. Nithin Rao
+                   </span>
                 </p>
-                <p className="text-xl font-bold text-teal-600">
+                <p className="text-lg sm:text-xl font-bold text-teal-600">
                   📞 9908432153
                 </p>
               </div>
 
               {/* Placement Badge */}
-              <div className="mb-8">
-                <button className="bg-red-600 text-white px-6 py-2 rounded font-bold hover:bg-red-700 transition-colors">
-                  100% Placements
-                </button>
+              <div className="mb-6 sm:mb-8">
+                <div className="bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white px-6 sm:px-10 py-3 sm:py-5 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 inline-block border border-red-400/30">
+                  <div className="text-4xl sm:text-5xl font-black">100%</div>
+                  <div className="text-lg sm:text-xl font-bold tracking-wider mt-1">PLACEMENTS</div>
+                </div>
               </div>
             </div>
 
             {/* Right Side - Apply Now Form */}
-            <div className="bg-white p-8 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Apply Now</h3>
-              <p className="text-gray-600 mb-6 text-sm">(Field marked with * are mandatory)</p>
+            <div id="apply-form" className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-lg">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Apply Now</h3>
+              <p className="text-gray-600 mb-4 sm:mb-6 text-xs sm:text-sm">(Field marked with * are mandatory)</p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 <div>
                   <input
                     type="text"
@@ -135,7 +164,7 @@ export default function Home() {
                     required
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-900 placeholder-gray-400"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-900 placeholder-gray-400 text-sm sm:text-base"
                   />
                 </div>
 
@@ -147,26 +176,26 @@ export default function Home() {
                     required
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-900 placeholder-gray-400"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-900 placeholder-gray-400 text-sm sm:text-base"
                   />
                 </div>
 
                 <div>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Enter Your Phone Number*"
-                    required
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-900 placeholder-gray-400"
-                  />
+                   <input
+                     type="tel"
+                     name="phone"
+                     placeholder="Enter Your Phone Number*"
+                     required
+                     value={formData.phone}
+                     onChange={handleInputChange}
+                     className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-gray-900 placeholder-gray-400 text-sm sm:text-base"
+                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-teal-500 text-white py-3 rounded font-semibold hover:bg-teal-600 transition-colors disabled:bg-gray-400"
+                  className="w-full bg-teal-500 text-white py-2 sm:py-3 rounded font-semibold hover:bg-teal-600 transition-colors disabled:bg-gray-400 text-sm sm:text-base"
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
@@ -352,12 +381,16 @@ export default function Home() {
                 title: "Research"
               }
             ].map((course, index) => (
-              <div key={index} className="flex flex-col items-center">
-                <div className="w-20 h-20 bg-white rounded-full border-2 border-gray-300 flex items-center justify-center mb-4 hover:shadow-lg transition-shadow">
+              <button
+                key={index}
+                onClick={() => handleCourseClick(course.title)}
+                className="flex flex-col items-center cursor-pointer group"
+              >
+                <div className="w-20 h-20 bg-white rounded-full border-2 border-gray-300 flex items-center justify-center mb-4 hover:shadow-lg hover:border-teal-500 transition-all group-hover:scale-110">
                   <span className="text-4xl">{course.icon}</span>
                 </div>
-                <p className="text-center text-gray-700 font-medium text-sm">{course.title}</p>
-              </div>
+                <p className="text-center text-gray-700 font-medium text-sm group-hover:text-teal-600">{course.title}</p>
+              </button>
             ))}
           </div>
         </div>
@@ -459,8 +492,8 @@ export default function Home() {
                   Dr. P. Nithin Rao
                 </p>
                 <p className="text-sm text-gray-200 leading-relaxed font-semibold">
-                  North Telangana Zone Office<br />
-                  Wanaparthy, Mancherial, Karimnagar
+                   Telangana Zonal Office<br />
+                   Warangal, Karimnagar, Asifabad, Mancherial
                 </p>
               </div>
             </div>
